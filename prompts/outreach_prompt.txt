@@ -1,0 +1,1 @@
+Personalization is implemented in app/personalization/llm.py. It is grounded only in collected creator fields and explicitly forbids invented facts.
