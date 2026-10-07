@@ -1,8 +1,25 @@
 import os
+<<<<<<< HEAD
+import re
+=======
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 import smtplib
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from app.database.db import already_contacted, log_outreach
+<<<<<<< HEAD
+from app.personalization.validator import validate_messages
+
+
+def send_or_simulate(creator: dict, campaign_id: str, subject: str, dry_run: bool = True) -> str:
+    email = str(creator.get("contact_email", "Not Found")).strip()
+    if email == "Not Found":
+        log_outreach(campaign_id, creator, False, "Skipped - email not found")
+        return "Skipped - email not found"
+    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
+        log_outreach(campaign_id, creator, False, "Skipped - invalid email")
+        return "Skipped - invalid email"
+=======
 
 
 def send_or_simulate(creator: dict, campaign_id: str, subject: str, dry_run: bool = True) -> str:
@@ -10,11 +27,20 @@ def send_or_simulate(creator: dict, campaign_id: str, subject: str, dry_run: boo
     if email == "Not Found":
         log_outreach(campaign_id, creator, False, "Skipped - email not found")
         return "Skipped - email not found"
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
     if already_contacted(campaign_id, creator["channel_id"]):
         return "Skipped - duplicate prevented"
     if not creator.get("email_pitch"):
         log_outreach(campaign_id, creator, False, "Skipped - message missing")
         return "Skipped - message missing"
+<<<<<<< HEAD
+    message_errors = validate_messages(creator["email_pitch"], creator.get("instagram_dm", ""))
+    if message_errors:
+        status = "Skipped - invalid message"
+        log_outreach(campaign_id, creator, False, status, error="; ".join(message_errors))
+        return status
+=======
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 
     if dry_run:
         log_outreach(campaign_id, creator, False, "Simulated - ready for review")

@@ -1,7 +1,20 @@
 .env
+<<<<<<< HEAD
+.env.*
+!.env.example
+venv/
+.venv/
+.venv*/
+__pycache__/
+*.pyc
+*.db
+data/*.csv
+.pytest_cache/
+=======
 venv/
 .venv/
 __pycache__/
 *.pyc
 data/*.db
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 .DS_Store

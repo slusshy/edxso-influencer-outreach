@@ -1,3 +1,74 @@
+<<<<<<< HEAD
+# Fieldnotes — Creator Research
+
+Fieldnotes discovers YouTube creators for a campaign, enriches public channel data, evaluates audience size, topic relevance and recent-video engagement, and prepares personalized outreach drafts for review.
+
+## Features
+
+- Search multiple YouTube creator phrases and deduplicate by channel ID.
+- Review public subscriber counts, recent video titles, estimated engagement and publicly listed contact details.
+- Set campaign-specific audience, relevance and engagement criteria.
+- Prepare and validate personalized email and Instagram DM drafts with Gemini.
+- Search, sort, filter, inspect and export campaign results.
+- Save campaign snapshots and a simulated outreach review log in SQLite.
+- Never send email automatically or invent missing contact information.
+
+## Run locally
+
+Use Python 3.10 or newer.
+
+1. Create and activate a virtual environment.
+2. Install dependencies:
+
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+3. Copy `.env.example` to `.env` and set valid `YOUTUBE_API_KEY` and `GEMINI_API_KEY` values.
+4. Start the web app:
+
+   ```sh
+   python server.py
+   ```
+
+5. Open `http://localhost:5000`.
+
+Install test tooling and run the suite with:
+
+```sh
+pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
+## Deploy on Railway
+
+Deploy the project directory (the directory containing `server.py` and `requirements.txt`) from GitHub.
+
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn server:app --bind 0.0.0.0:$PORT`
+- Add `YOUTUBE_API_KEY` and `GEMINI_API_KEY` in Railway service variables. Do not commit `.env` or paste keys into source files.
+- For campaign history to survive redeploys, attach a Railway Volume mounted at `/app/data` and set `DATA_DIR=/app/data`.
+- Keep one service replica while using SQLite.
+- Verify the deployment at `/api/health`.
+
+The application uses YouTube Data API and Gemini quotas and terms. Gemini features require an active, valid Google project and API key. The SQLite database and CSV exports are local generated data; they are excluded from Git.
+
+## Project layout
+
+```text
+app/                 Discovery, enrichment, fit rules, personalization and outreach
+static/              Fieldnotes browser styles and interactions
+templates/           Main Fieldnotes page
+tests/               Backend, web and behavior tests
+data/                Local database and generated CSV exports
+main.py              CLI and research pipeline
+server.py            Flask web server and JSON endpoints
+requirements.txt     Runtime and test dependencies
+requirements-dev.txt Test-only dependencies
+Procfile             Gunicorn process command
+.env.example         Environment-variable template (placeholders only)
+```
+=======
 # 🤖 AI Influencer Outreach System
 
 An automated AI-powered influencer discovery and outreach pipeline built for the **EDXSO AI Engineer Intern Assignment**.
@@ -525,3 +596,4 @@ SQLite outreach records
 Aayush Maan
 
 Built as part of the EDXSO AI Engineer Intern Assignment.
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e

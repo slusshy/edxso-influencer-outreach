@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f1e9" />
+    <meta name="description" content="A considered workspace for creator research and campaign outreach." />
+    <title>Fieldnotes — Creator intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="app-frame">
+      <aside class="rail">
+        <a class="wordmark" href="/" aria-label="Fieldnotes home"><span>f.</span></a>
+        <nav class="rail-nav" aria-label="Main navigation">
+          <a class="rail-item active" href="/" title="Campaign desk" aria-label="Campaign desk">01</a>
+          <button class="rail-item" id="history-nav" title="Campaign history" aria-label="Campaign history">↺</button>
+        </nav>
+        <div class="rail-foot">
+          <span class="online-dot"></span>
+          <span>LOCAL</span>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="masthead">
+          <div class="masthead-title">
+            <p class="kicker">EDXSO / CREATOR RESEARCH</p>
+            <h1>Fieldnotes<span class="title-period">.</span></h1>
+          </div>
+          <div class="masthead-actions">
+            <span id="connection-state" class="connection-state"><i></i> Engine ready</span>
+            <button class="icon-button" id="theme-toggle" aria-label="Switch color theme" title="Switch color theme">◐</button>
+            <button class="button button-dark" id="run-analysis-btn">Run a search <span>↗</span></button>
+          </div>
+        </header>
+
+        <section class="intro">
+          <div>
+            <p class="kicker">A BETTER SHORTLIST STARTS WITH BETTER SIGNAL</p>
+            <h2>Find the people<br />behind the <em>right</em> audience.</h2>
+          </div>
+          <p class="intro-note">A practical research desk for discovering, evaluating and preparing thoughtful creator partnerships. No auto-sending. You stay in control.</p>
+        </section>
+
+        <section class="search-layout" aria-label="Campaign setup">
+          <form class="search-form" id="campaign-form">
+            <div class="form-heading">
+              <div><span class="step-number">A</span><h3>Set your brief</h3></div>
+              <span class="microcopy">01 / CAMPAIGN</span>
+            </div>
+            <label class="field-label" for="campaign">What are you looking to promote?</label>
+            <textarea id="campaign" rows="3" maxlength="1200">A paid or affiliate partnership for an AI productivity tool that helps professionals automate repetitive workflows.</textarea>
+            <p class="field-hint">Include what it is, who it helps, the problem it solves and the kind of partnership you want. This brief guides the creator-specific drafts.</p>
+            <div class="query-label-row">
+              <label class="field-label" for="queries">Search phrases <span>separate with commas</span></label>
+              <button class="text-action suggest-button" id="suggest-queries" type="button">Suggest with Gemini ↗</button>
+            </div>
+            <input id="queries" type="text" value="AI tools, machine learning, generative AI, LLM tutorials, AI automation, Python AI" maxlength="500" />
+            <p class="field-hint">These phrases guide YouTube discovery and determine which creators count as relevant. Add phrases about your desired creator niche.</p>
+            <div class="form-footer">
+              <label class="check-control"><input id="personalize" type="checkbox" checked /><span>Write personalized email + DM</span></label>
+              <label class="check-control"><input id="review-log" type="checkbox" checked /><span>Save eligible contacts to review log</span></label>
+            </div>
+            <button class="button button-orange submit-button" id="submit-button" type="submit">Build my shortlist <span>→</span></button>
+            <p class="privacy-note">Research can take a minute. Emails are never sent automatically.</p>
+          </form>
+
+          <aside class="criteria-panel">
+            <div class="form-heading">
+              <div><span class="step-number">B</span><h3>Set your guardrails</h3></div>
+              <span class="microcopy">02 / FIT</span>
+            </div>
+            <div class="range-field">
+              <label for="target">Creators to find <strong id="target-display">20</strong></label>
+              <input id="target" type="range" min="5" max="100" step="5" value="20" />
+              <div class="range-labels"><span>5</span><span>100</span></div>
+            </div>
+            <div class="criteria-grid">
+              <label><span>Minimum audience</span><div class="number-wrap"><input id="min-subs" type="number" min="0" max="100000000" value="5000" /><small>subs</small></div></label>
+              <label><span>Maximum audience</span><div class="number-wrap"><input id="max-subs" type="number" min="1" max="100000000" value="100000" /><small>subs</small></div></label>
+              <label><span>Minimum engagement</span><div class="number-wrap"><input id="min-engagement" type="number" min="0" max="100" step="0.1" value="0.5" /><small>%</small></div></label>
+            </div>
+            <div class="guardrail-note"><span>✳</span><p>Fit is based on audience size, topic relevance and recent public video engagement.</p></div>
+          </aside>
+        </section>
+
+        <section class="campaign-bar">
+          <div><p class="kicker">YOUR WORKSPACE</p><h2 id="campaign-title">Latest research</h2></div>
+          <div class="campaign-actions">
+            <label class="select-wrap"><span class="visually-hidden">Campaign snapshot</span><select id="history-select"><option value="">Latest research</option></select></label>
+            <button class="button button-outline" id="export-button" disabled>Export CSV <span>↓</span></button>
+          </div>
+        </section>
+
+        <section class="metrics-row" aria-label="Campaign summary">
+          <article class="metric-card metric-featured"><span>CREATORS FOUND</span><strong id="stat-discovered">—</strong><small>Across your search phrases</small></article>
+          <article class="metric-card"><span>GOOD FIT</span><strong id="stat-qualified">—</strong><small id="qualified-note">Inside your guardrails</small></article>
+          <article class="metric-card"><span>PUBLIC EMAILS</span><strong id="stat-emails">—</strong><small>Found in public profile text</small></article>
+          <article class="metric-card"><span>AVG. ENGAGEMENT</span><strong id="stat-engagement">—</strong><small>Recent videos, estimate</small></article>
+        </section>
+
+        <section class="insight-row">
+          <article class="chart-panel">
+            <div class="panel-heading"><div><p class="kicker">FIT DISTRIBUTION</p><h3>Signal, at a glance</h3></div><span id="fit-total" class="small-caps">WAITING</span></div>
+            <div class="fit-chart" id="fit-chart">
+              <div class="chart-track"><span id="qualified-bar"></span></div>
+              <div class="chart-legend"><span><i class="legend-qualified"></i>Good fit <strong id="chart-qualified">—</strong></span><span><i class="legend-other"></i>Needs a look <strong id="chart-rejected">—</strong></span></div>
+              <p class="chart-footnote">Qualification is a first-pass signal, not an endorsement.</p>
+            </div>
+          </article>
+          <article class="chart-panel note-panel">
+            <p class="kicker">RESEARCH NOTE</p>
+            <blockquote id="research-note">Your shortlist will appear here after the first search. Every signal links back to public creator information.</blockquote>
+            <span class="note-mark">“</span>
+          </article>
+        </section>
+
+        <section class="creator-section">
+          <div class="creator-toolbar">
+            <div class="creator-heading"><p class="kicker">THE SHORTLIST</p><h3>Creator records <span id="result-count">0</span></h3></div>
+            <div class="table-controls">
+              <label class="search-input"><span aria-hidden="true">⌕</span><input type="search" id="filter-search" placeholder="Find a creator" /></label>
+              <select id="status-filter" aria-label="Filter by qualification"><option value="all">All creators</option><option value="Qualified">Good fit</option><option value="Rejected">Needs a look</option></select>
+              <select id="sort-filter" aria-label="Sort creators"><option value="subscribers">Largest audience</option><option value="engagement">Engagement</option><option value="name">Name A–Z</option></select>
+            </div>
+          </div>
+          <div id="empty-state" class="empty-state"><span class="empty-symbol">↗</span><h3>Your research starts here.</h3><p>Set a brief and search phrases above, then build a shortlist. Your results will be saved as a campaign snapshot.</p></div>
+          <div class="table-scroll hidden" id="table-scroll">
+            <table>
+              <thead><tr><th>CREATOR</th><th>FIT</th><th>AUDIENCE</th><th>ENGAGEMENT</th><th>PUBLIC EMAIL</th><th>CONTACT</th><th></th></tr></thead>
+              <tbody id="creator-rows"></tbody>
+            </table>
+          </div>
+          <p class="table-caption">Contact information is shown only when found publicly. Messages are drafts for review.</p>
+        </section>
+      </main>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <dialog id="creator-dialog" class="creator-dialog">
+      <form method="dialog"><button class="dialog-close" aria-label="Close">×</button></form>
+      <div id="creator-detail"></div>
+    </dialog>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </body>
+</html>

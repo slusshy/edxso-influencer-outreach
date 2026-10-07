@@ -1,5 +1,27 @@
 import os
 import json
+<<<<<<< HEAD
+import re
+import time
+from app.errors import safe_provider_error
+from app.personalization.validator import validate_messages
+
+
+def get_client():
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY is missing from .env")
+    from google import genai
+
+    return genai.Client(api_key=api_key)
+
+
+def generate_batch(creators, campaign, client=None):
+    client = client or get_client()
+=======
 import time
 from google import genai
 from dotenv import load_dotenv
@@ -15,6 +37,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 
 def generate_batch(creators, campaign):
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
     creator_data = []
 
     for creator in creators:
@@ -22,9 +45,16 @@ def generate_batch(creators, campaign):
             "channel_id": creator.get("channel_id"),
             "channel_name": creator.get("channel_name"),
             "platform": creator.get("platform", "YouTube"),
+<<<<<<< HEAD
+            "subscribers": creator.get("subscribers"),
+            "category": creator.get("category"),
+            "content_themes": creator.get("content_themes"),
+            "recent_content": creator.get("recent_content", []),
+=======
             "subscribers": creator.get("subscriberCount"),
             "category": creator.get("category"),
             "content_themes": creator.get("content_themes"),
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
         })
 
     prompt = f"""
@@ -46,6 +76,10 @@ For each creator generate:
 - Personalized to their niche/content
 - Suggest a relevant collaboration
 - Explain the value proposition
+<<<<<<< HEAD
+- Do not include bracketed placeholders such as [Creator Name] or [Your Company Name]
+=======
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 
 2. Instagram DM
 - 15-30 words
@@ -77,12 +111,21 @@ Return ONLY valid JSON in this format:
         contents=prompt,
     )
 
+<<<<<<< HEAD
+    text = (response.text or "").strip()
+    text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text, flags=re.IGNORECASE)
+    results = json.loads(text)
+    if not isinstance(results, list):
+        raise ValueError("Gemini response must be a JSON list")
+    return results
+=======
     text = response.text.strip()
 
     if text.startswith("```"):
         text = text.replace("```json", "").replace("```", "").strip()
 
     return json.loads(text)
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 
 
 def personalize_qualified(creators, campaign, batch_size=4):
@@ -96,6 +139,12 @@ def personalize_qualified(creators, campaign, batch_size=4):
 
     print(f"Qualified creators: {len(qualified)}")
 
+<<<<<<< HEAD
+    if batch_size < 1:
+        raise ValueError("batch_size must be at least 1")
+
+=======
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
     # Process in small batches
     for start in range(0, len(qualified), batch_size):
 
@@ -127,6 +176,22 @@ def personalize_qualified(creators, campaign, batch_size=4):
                     result = result_map.get(channel_id)
 
                     if result:
+<<<<<<< HEAD
+                        email_pitch = str(result.get("email_pitch", ""))
+                        instagram_dm = str(result.get("instagram_dm", ""))
+                        errors = validate_messages(email_pitch, instagram_dm)
+                        creator["email_pitch"] = email_pitch
+                        creator["instagram_dm"] = instagram_dm
+                        creator["personalization_status"] = "Ready" if not errors else "Invalid"
+                        creator["message_validation_errors"] = "; ".join(errors)
+
+                        print(f"Generated: {creator.get('channel_name')}")
+
+                    else:
+                        creator["personalization_status"] = "Failed"
+                        creator["message_validation_errors"] = "Gemini returned no result for this creator"
+                        print(f"No Gemini result for: {creator.get('channel_name')}")
+=======
                         creator["email_pitch"] = result["email_pitch"]
                         creator["instagram_dm"] = result["instagram_dm"]
 
@@ -140,14 +205,26 @@ def personalize_qualified(creators, campaign, batch_size=4):
                             f"⚠ No Gemini result for: "
                             f"{creator.get('channel_name')}"
                         )
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 
                 break
 
             except Exception as e:
 
+<<<<<<< HEAD
+                error_text = safe_provider_error(e, provider="Gemini")
+
+                if "rate limit reached" in error_text.casefold():
+                    if attempt + 1 == max_retries:
+                        for creator in batch:
+                            creator["personalization_status"] = "Failed"
+                            creator["message_validation_errors"] = error_text
+                        break
+=======
                 error_text = str(e)
 
                 if "429" in error_text or "RESOURCE_EXHAUSTED" in error_text:
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
 
                     wait_time = 60
 
@@ -159,9 +236,16 @@ def personalize_qualified(creators, campaign, batch_size=4):
                     time.sleep(wait_time)
 
                 else:
+<<<<<<< HEAD
+                    for creator in batch:
+                        creator["personalization_status"] = "Failed"
+                        creator["message_validation_errors"] = error_text
+                    print(f"Batch failed: {e}")
+=======
                     print(
                         f"✗ Batch failed: {e}"
                     )
+>>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
                     break
 
     return creators
