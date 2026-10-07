@@ -1,17 +1,7 @@
 google-api-python-client
-<<<<<<< HEAD
 google-genai
 python-dotenv
 requests
 beautifulsoup4
 Flask>=3.0,<4.0
 gunicorn>=22.0,<24.0
-=======
-python-dotenv
-requests
-beautifulsoup4
-openai
-pandas
-streamlit
-pytest
->>>>>>> a44596b3980b5be3485c1a62188cff87cebbd26e
